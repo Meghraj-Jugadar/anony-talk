@@ -36,6 +36,7 @@ export class Home implements OnInit {
     this.postService.getPosts(this.activeTag ?? undefined, this.sort, this.page).subscribe({
       next: (data) => {
         this.posts = [...this.posts, ...data];
+        console.log("Loaded posts:", data);
         this.loading = false;
         this.cdr.detectChanges();
       },
