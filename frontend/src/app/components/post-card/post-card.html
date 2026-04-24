@@ -1,0 +1,40 @@
+<div class="card cursor-pointer group">
+  <div class="flex items-start justify-between gap-2 mb-3">
+    <div class="flex items-center gap-2 text-sm text-gray-500">
+      <span class="text-gray-400 font-medium">{{ post.anonymous_name }}</span>
+      <span>·</span>
+      <span>{{ post.created_at | date:'shortDate' }}</span>
+      <span class="text-base" [title]="post.sentiment">{{ sentimentEmoji }}</span>
+    </div>
+    <button (click)="onReport($event)"
+      class="text-xs text-gray-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
+      ⚑ Report
+    </button>
+  </div>
+
+  <a [routerLink]="['/post', post.id]">
+    <h2 class="text-lg font-semibold text-white mb-2 group-hover:text-primary transition-colors">
+      {{ post.title }}
+    </h2>
+    <p class="text-gray-400 text-sm line-clamp-2 mb-3">{{ post.content }}</p>
+  </a>
+
+  <div class="flex items-center justify-between">
+    <div class="flex flex-wrap gap-1.5">
+      <app-tag-badge *ngFor="let tag of post.tags" [tag]="tag" />
+    </div>
+    <div class="flex items-center gap-3">
+      <a [routerLink]="['/post', post.id]" class="flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223ZM8.25 10.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM10.875 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875-1.125a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25Z" clip-rule="evenodd" />
+        </svg>
+        {{ post.comment_count || 0 }}
+      </a>
+      <app-vote-buttons
+        [upvotes]="post.upvotes"
+        [downvotes]="post.downvotes"
+        [voted]="voted"
+        (vote)="onVote($event)" />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="max-w-xl mx-auto">
+  <h1 class="text-2xl font-bold text-white mb-1">Share Anonymously</h1>
+  <p class="text-gray-500 text-sm mb-6">Your identity stays hidden. Just talk.</p>
+
+  <div *ngIf="error" class="bg-red-900/30 border border-red-800 text-red-300 rounded-lg px-4 py-3 mb-4 text-sm">
+    {{ error }}
+  </div>
+
+  <form (ngSubmit)="submit()" class="flex flex-col gap-4">
+    <div>
+      <label class="text-sm text-gray-400 mb-1 block">Title</label>
+      <input [(ngModel)]="title" name="title" class="input" placeholder="What's on your mind?" maxlength="255" required />
+    </div>
+
+    <div>
+      <label class="text-sm text-gray-400 mb-1 block">Content</label>
+      <textarea [(ngModel)]="content" name="content" class="input resize-none" rows="5"
+        placeholder="Share your story, ask for advice..." required></textarea>
+    </div>
+
+    <div>
+      <label class="text-sm text-gray-400 mb-2 block">Tags (select all that apply)</label>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" *ngFor="let t of tags" (click)="toggleTag(t)"
+          [class]="selectedTags.includes(t) ? 'tag bg-indigo-700/60 text-white cursor-pointer' : 'tag cursor-pointer hover:bg-indigo-800/50'">
+          {{ t }}
+        </button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary w-full mt-2" [disabled]="submitting">
+      {{ submitting ? 'Posting...' : '🎭 Post Anonymously' }}
+    </button>
+  </form>
+</div>

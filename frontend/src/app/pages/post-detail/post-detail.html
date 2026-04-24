@@ -1,0 +1,88 @@
+<div>
+  <a routerLink="/" class="text-gray-500 hover:text-white text-sm mb-6 inline-block transition-colors">
+    ← Back to Feed
+  </a>
+
+  <div *ngIf="loading" class="text-center py-16 text-gray-500">Loading...</div>
+
+  <div *ngIf="!loading && post">
+    <div class="card mb-6">
+      <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+        <span class="text-gray-400 font-medium">{{ post.anonymous_name }}</span>
+        <span>·</span>
+        <span>{{ post.created_at | date:'medium' }}</span>
+        <span class="text-base">{{ sentimentEmoji }}</span>
+        <span class="ml-auto text-xs text-gray-600">Expires {{ post.expires_at | date:'shortTime' }}</span>
+      </div>
+
+      <h1 class="text-2xl font-bold text-white mb-3">{{ post.title }}</h1>
+      <p class="text-gray-300 leading-relaxed mb-4">{{ post.content }}</p>
+
+      <div class="flex flex-wrap gap-1.5 mb-4">
+        <app-tag-badge *ngFor="let tag of post.tags" [tag]="tag" />
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-gray-800">
+        <app-vote-buttons
+          [upvotes]="post.upvotes"
+          [downvotes]="post.downvotes"
+          [voted]="postVoted"
+          (vote)="onPostVote($event)" />
+        <button (click)="reportPost()" class="text-xs text-gray-600 hover:text-red-400 transition-colors">
+          ⚑ Report
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="post.ai_reply" class="bg-indigo-950/50 border border-indigo-800/50 rounded-xl p-4 mb-6">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-lg">🤖</span>
+        <span class="text-sm font-semibold text-indigo-300">AI Companion</span>
+      </div>
+      <p class="text-gray-300 text-sm leading-relaxed">{{ post.ai_reply }}</p>
+    </div>
+
+    <div class="mb-4">
+      <h2 class="text-lg font-semibold text-white mb-4">
+        {{ comments.length }} {{ comments.length === 1 ? 'Reply' : 'Replies' }}
+      </h2>
+
+      <div class="card mb-4">
+        <textarea [(ngModel)]="newComment" class="input resize-none mb-3" rows="3"
+          placeholder="Share your advice anonymously..."></textarea>
+        <div *ngIf="commentError" class="text-red-400 text-xs mb-2">{{ commentError }}</div>
+        <button (click)="submitComment()" class="btn-primary text-sm" [disabled]="submitting">
+          {{ submitting ? 'Posting...' : 'Reply Anonymously' }}
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div *ngFor="let c of comments" class="card group">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <span class="text-gray-400 font-medium">{{ c.anonymous_name }}</span>
+              <span>·</span>
+              <span>{{ c.created_at | date:'shortTime' }}</span>
+            </div>
+            <button (click)="reportComment(c.id)"
+              class="text-xs text-gray-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
+              ⚑ Report
+            </button>
+          </div>
+          <p class="text-gray-300 text-sm leading-relaxed mb-3">{{ c.content }}</p>
+          <app-vote-buttons
+            [upvotes]="c.upvotes"
+            [downvotes]="c.downvotes"
+            [voted]="getCommentVoted(c.id)"
+            (vote)="onCommentVote(c, $event)" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !post" class="text-center py-16 text-gray-500">
+    <p class="text-4xl mb-3">💨</p>
+    <p>Post not found or has expired.</p>
+    <a routerLink="/" class="btn-primary inline-block mt-4 text-sm">Back to Feed</a>
+  </div>
+</div>

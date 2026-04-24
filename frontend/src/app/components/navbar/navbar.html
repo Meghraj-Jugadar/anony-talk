@@ -1,0 +1,13 @@
+<nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+  <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a routerLink="/" class="flex items-center gap-2">
+      <span class="text-2xl">🎭</span>
+      <span class="text-xl font-bold text-white">AnonyTalk</span>
+    </a>
+    <div class="flex items-center gap-3">
+      <a routerLink="/" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact:true}"
+         class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Feed</a>
+      <a routerLink="/create" class="btn-primary text-sm">+ New Post</a>
+    </div>
+  </div>
+</nav>

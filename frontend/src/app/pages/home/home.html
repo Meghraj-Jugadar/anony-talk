@@ -1,0 +1,46 @@
+<div>
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-white mb-1">Anonymous Feed</h1>
+    <p class="text-gray-500 text-sm">Share your thoughts. No judgment. No identity.</p>
+  </div>
+
+  <div class="flex flex-wrap gap-2 mb-4">
+    <button *ngFor="let s of sorts" (click)="setSort(s)"
+      [class]="sort === s ? 'btn-primary text-sm py-1.5' : 'btn-ghost text-sm py-1.5'">
+      {{ s | titlecase }}
+    </button>
+  </div>
+
+  <div class="flex flex-wrap gap-1.5 mb-6">
+    <button (click)="setTag(null)"
+      [class]="!activeTag ? 'tag bg-indigo-700/60 text-white' : 'tag cursor-pointer hover:bg-indigo-800/50'">
+      All
+    </button>
+    <button *ngFor="let t of tags" (click)="setTag(t)"
+      [class]="activeTag === t ? 'tag bg-indigo-700/60 text-white' : 'tag cursor-pointer hover:bg-indigo-800/50'">
+      {{ t }}
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-16 text-gray-500">Loading posts...</div>
+
+  <div *ngIf="!loading && posts.length === 0" class="text-center py-16 text-gray-500">
+    <p class="text-4xl mb-3">🎭</p>
+    <p>No posts yet. Be the first to share!</p>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <app-post-card
+      *ngFor="let post of posts"
+      [post]="post"
+      [voted]="getVoted(post.id)"
+      (vote)="onVote(post, $event)"
+      (report)="onReport(post.id)" />
+  </div>
+
+  <div *ngIf="posts.length > 0" class="mt-6 text-center">
+    <button (click)="loadMore()" class="btn-ghost" [disabled]="loading">
+      {{ loading ? 'Loading...' : 'Load More' }}
+    </button>
+  </div>
+</div>
