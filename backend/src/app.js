@@ -8,7 +8,7 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: [process.env.FRONTEND_URL || 'http://localhost:4200', 'https://anony-talk-olive.vercel.app'],
   credentials: true,
 }));
 app.use(express.json());
@@ -29,6 +29,11 @@ setInterval(deleteExpiredPosts, 60 * 60 * 1000);
 
 const PORT = process.env.PORT || 3000;
 
-initDB().then(() => {
-  app.listen(PORT, () => console.log(`AnonyTalk backend running on port ${PORT}`));
-});
+initDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`AnonyTalk backend running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error('DB init failed:', err.message);
+    app.listen(PORT, () => console.log(`AnonyTalk backend running on port ${PORT} (DB failed)`));
+  });
