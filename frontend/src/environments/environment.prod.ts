@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://anony-talk-olive.onrender.com/api',
+  apiUrl: 'https://anony-talk.onrender.com/api',
 };

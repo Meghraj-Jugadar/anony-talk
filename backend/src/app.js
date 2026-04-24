@@ -11,6 +11,7 @@ app.use(cors({
   origin: [
     'http://localhost:4200',
     process.env.FRONTEND_URL || 'https://anony-talk-olive.vercel.app',
+    'https://anony-talk-olive.vercel.app',
   ],
   credentials: true,
 }));
