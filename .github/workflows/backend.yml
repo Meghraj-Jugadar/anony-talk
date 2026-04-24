@@ -34,6 +34,6 @@ jobs:
         working-directory: backend
 
       - name: Deploy to Render
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.RENDER_DEPLOY_HOOK_URL != ''
         run: |
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
