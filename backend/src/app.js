@@ -8,8 +8,11 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 app.use(cors({
-  origin: '*',
-  credentials: false,
+  origin: [
+    'http://localhost:4200',
+    process.env.FRONTEND_URL || 'https://anony-talk-olive.vercel.app',
+  ],
+  credentials: true,
 }));
 app.use(express.json());
 
