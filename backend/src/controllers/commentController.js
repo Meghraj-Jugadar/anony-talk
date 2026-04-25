@@ -1,4 +1,5 @@
 const { pool } = require('../config/db');
+const { createNotification } = require('./notificationController');
 
 const ADJECTIVES = ['Anonymous', 'Silent', 'Hidden', 'Quiet', 'Brave', 'Gentle', 'Calm', 'Wise'];
 const NOUNS = ['Panda', 'Fox', 'Owl', 'Wolf', 'Bear', 'Eagle', 'Tiger', 'Deer'];
@@ -40,6 +41,27 @@ exports.createComment = async (req, res, next) => {
       `INSERT INTO comments (post_id, anonymous_name, content) VALUES ($1, $2, $3) RETURNING *`,
       [postId, anonymous_name, content]
     );
+
+    // Notify post owner
+    const postData = await pool.query(`SELECT session_id, title FROM posts WHERE id = $1`, [postId]);
+    if (postData.rows.length && postData.rows[0].session_id !== req.body.session_id) {
+      await createNotification(
+        postData.rows[0].session_id,
+        'new_comment',
+        `Someone replied to your post "${postData.rows[0].title}"`,
+        postId
+      );
+      // Emit real-time notification via socket
+      const io = req.app.get('io');
+      if (io) {
+        io.to(`notif_${postData.rows[0].session_id}`).emit('new_notification', {
+          type: 'new_comment',
+          message: `💬 Someone replied to your post "${postData.rows[0].title}"`,
+          post_id: postId,
+        });
+      }
+    }
+
     res.status(201).json(rows[0]);
   } catch (err) {
     next(err);

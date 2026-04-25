@@ -1,0 +1,69 @@
+<!-- Recovery trigger button in corner -->
+<button (click)="openRecovery()"
+  class="fixed bottom-4 right-4 text-xs text-gray-600 hover:text-gray-400 transition-colors z-40">
+  🔑 Restore Identity
+</button>
+
+<!-- Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="close()"></div>
+
+  <div class="relative bg-gray-900 border border-gray-800 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+
+    <!-- New Identity -->
+    <div *ngIf="!showRecovery">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-3xl">🎭</span>
+        <div>
+          <h2 class="text-lg font-bold text-white">Welcome to AnonyTalk</h2>
+          <p class="text-sm text-gray-500">Your anonymous identity has been created</p>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 rounded-xl p-4 mb-4">
+        <p class="text-xs text-gray-500 mb-2">Your Recovery Code</p>
+        <div class="flex items-center justify-between gap-3">
+          <code class="text-xl font-mono font-bold text-primary tracking-widest">
+            {{ identity?.recovery_code }}
+          </code>
+          <button (click)="copyCode()" class="btn-ghost text-xs py-1.5 px-3 flex-shrink-0">
+            {{ copied ? '✓ Copied!' : 'Copy' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-yellow-900/20 border border-yellow-800/50 rounded-lg p-3 mb-5">
+        <p class="text-xs text-yellow-400">
+          ⚠️ Save this code! It's the only way to restore your identity if you clear your browser or switch devices. We don't store any personal info.
+        </p>
+      </div>
+
+      <button (click)="close()" class="btn-primary w-full">Got it, let's go!</button>
+      <button (click)="showRecovery = true" class="btn-ghost w-full mt-2 text-sm">
+        I have a recovery code
+      </button>
+    </div>
+
+    <!-- Recovery Form -->
+    <div *ngIf="showRecovery">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-3xl">🔑</span>
+        <div>
+          <h2 class="text-lg font-bold text-white">Restore Identity</h2>
+          <p class="text-sm text-gray-500">Enter your recovery code</p>
+        </div>
+      </div>
+
+      <input [(ngModel)]="recoveryInput" class="input mb-3 font-mono tracking-widest uppercase text-center text-lg"
+        placeholder="XXXX-XXXX-XXXX" maxlength="14" />
+
+      <div *ngIf="recoveryError" class="text-red-400 text-sm mb-3 text-center">{{ recoveryError }}</div>
+
+      <button (click)="recover()" class="btn-primary w-full mb-2" [disabled]="recovering">
+        {{ recovering ? 'Restoring...' : 'Restore My Identity' }}
+      </button>
+      <button (click)="showRecovery = false; close()" class="btn-ghost w-full text-sm">Cancel</button>
+    </div>
+
+  </div>
+</div>

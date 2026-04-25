@@ -8,11 +8,13 @@ export class LoaderService {
 
   show() {
     this.count++;
-    this.loading$.next(true);
+    Promise.resolve().then(() => this.loading$.next(true));
   }
 
   hide() {
     this.count = Math.max(0, this.count - 1);
-    if (this.count === 0) this.loading$.next(false);
+    Promise.resolve().then(() => {
+      if (this.count === 0) this.loading$.next(false);
+    });
   }
 }

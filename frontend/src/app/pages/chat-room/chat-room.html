@@ -1,0 +1,123 @@
+<div class="flex flex-col" style="height: calc(100vh - 5rem);">
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex-1 flex items-center justify-center text-gray-500">
+    <div class="text-center">
+      <div class="text-4xl mb-3 animate-pulse">🤖</div>
+      <p>Connecting to AI...</p>
+    </div>
+  </div>
+
+  <!-- Post not found -->
+  <div *ngIf="!loading && !post" class="flex-1 flex items-center justify-center text-gray-500">
+    <div class="text-center">
+      <p class="text-4xl mb-3">💨</p>
+      <p>Post not found or expired.</p>
+      <a routerLink="/" class="btn-primary inline-block mt-4 text-sm">Back to Feed</a>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && post" class="flex flex-col h-full">
+
+    <!-- Header -->
+    <div class="bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 mb-3 flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <div class="w-9 h-9 bg-indigo-600 rounded-full flex items-center justify-center text-lg">🤖</div>
+          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-gray-900"></span>
+        </div>
+        <div>
+          <p class="font-semibold text-white text-sm">AI Companion</p>
+          <p class="text-xs text-green-400">Online · Always here for you</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a [routerLink]="['/post', post.id]"
+          class="text-xs text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+          </svg>
+          Back to Post
+        </a>
+      </div>
+    </div>
+
+    <!-- Post context pill -->
+    <div class="bg-indigo-950/40 border border-indigo-900/50 rounded-lg px-3 py-2 mb-3 flex-shrink-0">
+      <p class="text-xs text-indigo-400 font-medium mb-0.5">Chatting about</p>
+      <p class="text-sm text-gray-300 line-clamp-1">{{ post.title }}</p>
+    </div>
+
+    <!-- Messages area -->
+    <div class="flex-1 overflow-y-auto flex flex-col gap-4 pb-2 pr-1" #scrollContainer>
+
+      <!-- Date separator -->
+      <div class="flex items-center gap-3 my-1">
+        <div class="flex-1 h-px bg-gray-800"></div>
+        <span class="text-xs text-gray-600">Today</span>
+        <div class="flex-1 h-px bg-gray-800"></div>
+      </div>
+
+      <div *ngFor="let msg of messages; let i = index" class="flex flex-col"
+        [class]="msg.role === 'user' ? 'items-end' : 'items-start'">
+
+        <!-- Avatar + name -->
+        <div class="flex items-center gap-2 mb-1 px-1"
+          [class]="msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'">
+          <div [class]="msg.role === 'user'
+            ? 'w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs'
+            : 'w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-xs'">
+            {{ msg.role === 'user' ? '👤' : '🤖' }}
+          </div>
+          <span class="text-xs text-gray-600">
+            {{ msg.role === 'user' ? 'You' : 'AI Companion' }} · {{ msg.time | date:'shortTime' }}
+          </span>
+        </div>
+
+        <!-- Bubble -->
+        <div [class]="msg.role === 'user'
+          ? 'bg-primary text-white rounded-2xl rounded-tr-none px-4 py-3 max-w-sm lg:max-w-lg shadow-lg'
+          : 'bg-gray-800 border border-gray-700/50 text-gray-100 rounded-2xl rounded-tl-none px-4 py-3 max-w-sm lg:max-w-lg shadow-lg'">
+          <p class="text-sm leading-relaxed whitespace-pre-wrap">{{ msg.content }}</p>
+        </div>
+      </div>
+
+      <!-- AI Typing indicator -->
+      <div *ngIf="aiTyping" class="flex flex-col items-start">
+        <div class="flex items-center gap-2 mb-1 px-1">
+          <div class="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-xs">🤖</div>
+          <span class="text-xs text-gray-600">AI Companion is typing...</span>
+        </div>
+        <div class="bg-gray-800 border border-gray-700/50 rounded-2xl rounded-tl-none px-4 py-3">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
+            <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:150ms"></span>
+            <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:300ms"></span>
+          </div>
+        </div>
+      </div>
+
+      <div #messagesEnd></div>
+    </div>
+
+    <!-- Input area -->
+    <div class="flex-shrink-0 mt-3">
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-3 flex items-end gap-3">
+        <div class="flex-1">
+          <textarea [(ngModel)]="newMessage" (keydown)="onEnter($event)"
+            class="w-full bg-transparent text-gray-100 text-sm resize-none outline-none placeholder-gray-600 max-h-32"
+            rows="1" placeholder="Share what's on your mind..."
+            (input)="autoResize($event)"></textarea>
+        </div>
+        <button (click)="sendMessage()" [disabled]="aiTyping || !newMessage.trim()"
+          class="w-9 h-9 bg-primary hover:bg-primary-dark disabled:opacity-40 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.478 2.405a.75.75 0 0 0-.926.94l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.405Z" />
+          </svg>
+        </button>
+      </div>
+      <p class="text-xs text-gray-700 text-center mt-2">Press Enter to send · Shift+Enter for new line</p>
+    </div>
+
+  </div>
+</div>

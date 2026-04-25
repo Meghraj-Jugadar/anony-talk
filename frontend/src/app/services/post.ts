@@ -34,7 +34,7 @@ export class PostService {
     return this.http.get<Post>(`${this.api}/${id}`);
   }
 
-  createPost(data: { title: string; content: string; tags: string[] }): Observable<Post> {
+  createPost(data: { title: string; content: string; tags: string[]; session_id?: string }): Observable<Post> {
     return this.http.post<Post>(this.api, data);
   }
 

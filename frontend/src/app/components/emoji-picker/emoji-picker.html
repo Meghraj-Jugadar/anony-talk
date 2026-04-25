@@ -1,0 +1,22 @@
+<div class="relative inline-block">
+
+  <button type="button" (click)="toggle()"
+    class="text-gray-500 hover:text-yellow-400 transition-colors text-lg leading-none p-1 rounded-lg hover:bg-gray-800">
+    😊
+  </button>
+
+  <div *ngIf="open"
+    class="absolute z-[300] shadow-2xl rounded-xl overflow-hidden"
+    [ngClass]="{
+      'bottom-10': position.top,
+      'top-10': position.bottom,
+      'right-0': position.left,
+      'left-0': position.right
+    }">
+    <emoji-picker
+      class="dark"
+      (emoji-click)="onEmojiClick($event)">
+    </emoji-picker>
+  </div>
+
+</div>

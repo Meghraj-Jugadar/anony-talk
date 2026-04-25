@@ -7,6 +7,7 @@ import { CommentService, Comment } from '../../services/comment';
 import { SessionService } from '../../services/session';
 import { TagBadge } from '../../components/tag-badge/tag-badge';
 import { VoteButtons } from '../../components/vote-buttons/vote-buttons';
+import { EmojiPicker } from '../../components/emoji-picker/emoji-picker';
 
 const SENTIMENT_MAP: Record<string, string> = {
   happy: '😊', sad: '😢', angry: '😠', neutral: '😐',
@@ -14,7 +15,7 @@ const SENTIMENT_MAP: Record<string, string> = {
 
 @Component({
   selector: 'app-post-detail',
-  imports: [NgFor, NgIf, DatePipe, FormsModule, RouterLink, TagBadge, VoteButtons],
+  imports: [NgFor, NgIf, DatePipe, FormsModule, RouterLink, TagBadge, VoteButtons, EmojiPicker],
   templateUrl: './post-detail.html',
 })
 export class PostDetail implements OnInit {
@@ -119,5 +120,15 @@ export class PostDetail implements OnInit {
       next: () => alert('Report submitted!'),
       error: (e) => alert(e.error?.error || 'Already reported'),
     });
+  }
+
+  autoResize(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 160) + 'px';
+  }
+
+  insertEmoji(emoji: string) {
+    this.newComment += emoji;
   }
 }

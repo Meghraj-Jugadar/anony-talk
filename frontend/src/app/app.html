@@ -1,5 +1,9 @@
 <app-loader />
-<app-navbar />
-<main class="max-w-3xl mx-auto px-4 py-8">
-  <router-outlet />
-</main>
+<app-toast />
+<ng-container *ngIf="ready">
+  <app-navbar />
+  <app-identity-modal />
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <router-outlet />
+  </main>
+</ng-container>

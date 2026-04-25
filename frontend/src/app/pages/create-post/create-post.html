@@ -7,17 +7,33 @@
   </div>
 
   <form (ngSubmit)="submit()" class="flex flex-col gap-4">
+
+    <!-- Title -->
     <div>
       <label class="text-sm text-gray-400 mb-1 block">Title</label>
-      <input [(ngModel)]="title" name="title" class="input" placeholder="What's on your mind?" maxlength="255" required />
+      <div class="bg-gray-800 border border-gray-700 rounded-lg flex items-center gap-2 px-3 focus-within:border-primary transition-colors">
+        <input [(ngModel)]="title" name="title"
+          class="bg-transparent text-gray-100 py-2 flex-1 outline-none placeholder-gray-600 text-sm"
+          placeholder="What's on your mind?" maxlength="255" required />
+        <app-emoji-picker (emojiSelect)="insertEmoji('title', $event)" />
+      </div>
     </div>
 
+    <!-- Content -->
     <div>
       <label class="text-sm text-gray-400 mb-1 block">Content</label>
-      <textarea [(ngModel)]="content" name="content" class="input resize-none" rows="5"
-        placeholder="Share your story, ask for advice..." required></textarea>
+      <div class="bg-gray-800 border border-gray-700 rounded-lg focus-within:border-primary transition-colors">
+        <textarea #contentRef [(ngModel)]="content" name="content"
+          class="bg-transparent text-gray-100 px-3 pt-3 w-full outline-none placeholder-gray-600 text-sm resize-none"
+          rows="5" placeholder="Share your story, ask for advice..." required></textarea>
+        <div class="flex items-center justify-between px-3 pb-2 border-t border-gray-700 mt-1 pt-2">
+          <app-emoji-picker (emojiSelect)="insertEmoji('content', $event)" />
+          <span class="text-xs text-gray-600">{{ content.length }} chars</span>
+        </div>
+      </div>
     </div>
 
+    <!-- Tags -->
     <div>
       <label class="text-sm text-gray-400 mb-2 block">Tags (select all that apply)</label>
       <div class="flex flex-wrap gap-2">

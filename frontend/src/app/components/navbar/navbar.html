@@ -4,9 +4,10 @@
       <span class="text-2xl">🎭</span>
       <span class="text-xl font-bold text-white">AnonyTalk</span>
     </a>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2">
       <a routerLink="/" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact:true}"
-         class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Feed</a>
+         class="text-gray-400 hover:text-white transition-colors text-sm font-medium px-2">Feed</a>
+      <app-notification-bell />
       <a routerLink="/create" class="btn-primary text-sm">+ New Post</a>
     </div>
   </div>

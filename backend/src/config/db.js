@@ -23,6 +23,7 @@ const initDB = async () => {
     CREATE TABLE IF NOT EXISTS posts (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       anonymous_name VARCHAR(50) NOT NULL,
+      session_id VARCHAR(100),
       title VARCHAR(255) NOT NULL,
       content TEXT NOT NULL,
       tags TEXT[] DEFAULT '{}',
@@ -63,7 +64,38 @@ const initDB = async () => {
       session_id VARCHAR(100) NOT NULL,
       created_at TIMESTAMP DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS notifications (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      session_id VARCHAR(100) NOT NULL,
+      type VARCHAR(30) NOT NULL,
+      message TEXT NOT NULL,
+      post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+      is_read BOOLEAN DEFAULT FALSE,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS identities (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      session_id VARCHAR(100) UNIQUE NOT NULL,
+      recovery_code VARCHAR(20) UNIQUE NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW(),
+      last_seen TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS chat_messages (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+      session_id VARCHAR(100) NOT NULL,
+      role VARCHAR(10) NOT NULL,
+      content TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
   `);
+  // Migrations - add columns if not exist
+  await pool.query(`
+    ALTER TABLE posts ADD COLUMN IF NOT EXISTS session_id VARCHAR(100);
+  `);
+
   console.log('Database initialized');
 };
 

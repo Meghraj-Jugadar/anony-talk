@@ -6,6 +6,35 @@
   body {
     @apply bg-gray-950 text-gray-100 font-sans;
   }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #312e81;
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4f46e5;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #312e81 transparent;
+  }
 }
 
 @layer utilities {
@@ -16,6 +45,13 @@
     0% { width: 0%; margin-left: 0%; }
     50% { width: 60%; margin-left: 20%; }
     100% { width: 0%; margin-left: 100%; }
+  }
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
   }
 }
 
@@ -35,4 +71,24 @@
   .tag {
     @apply text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-900/50 text-indigo-300 border border-indigo-800;
   }
+}
+
+/* Emoji Picker Dark Theme */
+emoji-picker {
+  --background: #111827;
+  --border-color: #1f2937;
+  --button-active-background: #1f2937;
+  --button-hover-background: #1f2937;
+  --category-font-color: #9ca3af;
+  --emoji-padding: 0.5rem;
+  --emoji-size: 1.375rem;
+  --indicator-color: #6366f1;
+  --input-border-color: #374151;
+  --input-font-color: #f3f4f6;
+  --input-placeholder-color: #6b7280;
+  --outline-color: #6366f1;
+  --search-background: #1f2937;
+  --num-columns: 8;
+  width: 320px;
+  height: 380px;
 }

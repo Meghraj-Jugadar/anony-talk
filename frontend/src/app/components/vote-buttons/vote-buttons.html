@@ -1,18 +1,19 @@
-<div class="flex items-center gap-1">
+<div class="flex items-center gap-2">
+
+  <!-- Heart (upvote) -->
   <button (click)="onVote('up')"
-    [ngClass]="voted === 'up' ? 'text-green-400 bg-green-900/30' : 'text-gray-400 hover:text-green-400 hover:bg-green-900/20'"
-    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M7.493 18.75c-.425 0-.82-.236-.975-.632A7.48 7.48 0 0 1 6 15.375c0-1.75.599-3.358 1.602-4.634.151-.192.373-.309.6-.397.473-.183.89-.514 1.212-.924a9.042 9.042 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H14.23c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23h-.777ZM2.331 10.727a11.969 11.969 0 0 0-.831 4.398 12 12 0 0 0 .52 3.507C2.28 19.482 3.105 20.25 4.105 20.25H4.5c.919 0 1.714-.56 2.122-1.366a.75.75 0 0 0 .082-.34v-.962a.75.75 0 0 0-.75-.75 1.5 1.5 0 0 1-1.5-1.5v-.75a.75.75 0 0 0-.75-.75 1.5 1.5 0 0 1-1.373-2.025Z" />
-    </svg>
-    {{ upvotes }}
+    class="flex items-center gap-1.5 text-sm font-medium transition-all"
+    [ngClass]="voted === 'up' ? 'text-pink-400' : 'text-gray-500 hover:text-pink-400'">
+    <span class="text-base leading-none">{{ voted === 'up' ? '❤️' : '🤍' }}</span>
+    <span>{{ upvotes }}</span>
   </button>
+
+  <!-- Broken Heart (downvote) -->
   <button (click)="onVote('down')"
-    [ngClass]="voted === 'down' ? 'text-red-400 bg-red-900/30' : 'text-gray-400 hover:text-red-400 hover:bg-red-900/20'"
-    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M15.73 5.25h1.035A7.465 7.465 0 0 1 18 9.375a7.465 7.465 0 0 1-1.235 4.125h-.148c-.806 0-1.534.446-2.031 1.08a9.04 9.04 0 0 1-2.861 2.4c-.723.384-1.35.956-1.653 1.715a4.499 4.499 0 0 0-.322 1.672v.633A.75.75 0 0 1 9 21a2.25 2.25 0 0 1-2.25-2.25 4.5 4.5 0 0 1 .321-1.672.999.999 0 0 0-.442-1.328 4.5 4.5 0 0 1-.32-.19 4.5 4.5 0 0 1-1.168-1.168 4.5 4.5 0 0 1-.19-.32.999.999 0 0 0-1.328-.442 4.5 4.5 0 0 1-1.672.321A2.25 2.25 0 0 1 0 12a2.25 2.25 0 0 1 2.25-2.25c.414 0 .82.114 1.168.321a.999.999 0 0 0 1.328-.442 4.5 4.5 0 0 1 .19-.32 4.5 4.5 0 0 1 1.168-1.168 4.5 4.5 0 0 1 .32-.19.999.999 0 0 0 .442-1.328A4.5 4.5 0 0 1 6.545 5.25H15.73Z" />
-    </svg>
-    {{ downvotes }}
+    class="flex items-center gap-1.5 text-sm font-medium transition-all"
+    [ngClass]="voted === 'down' ? 'text-red-400' : 'text-gray-500 hover:text-red-400'">
+    <span class="text-base leading-none">{{ voted === 'down' ? '💔' : '🖤' }}</span>
+    <span>{{ downvotes }}</span>
   </button>
+
 </div>

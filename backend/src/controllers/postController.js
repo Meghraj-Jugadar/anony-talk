@@ -27,26 +27,7 @@ const detectSentiment = (text) => {
   return 'neutral';
 };
 
-const getAIReply = async (title, content) => {
-  try {
-    const OpenAI = require('openai');
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a compassionate anonymous advice assistant. Give a short, empathetic, helpful reply in 2-3 sentences.',
-        },
-        { role: 'user', content: `Title: ${title}\n\n${content}` },
-      ],
-      max_tokens: 150,
-    });
-    return response.choices[0].message.content;
-  } catch {
-    return null;
-  }
-};
+const { getAIReply } = require('../utils/groq');
 
 exports.getAllPosts = async (req, res, next) => {
   try {
@@ -95,17 +76,17 @@ exports.getPostById = async (req, res, next) => {
 
 exports.createPost = async (req, res, next) => {
   try {
-    const { title, content, tags = [] } = req.body;
+    const { title, content, tags = [], session_id } = req.body;
     if (!title || !content) return res.status(400).json({ error: 'Title and content are required' });
 
     const anonymous_name = generateName();
     const sentiment = detectSentiment(`${title} ${content}`);
-    const ai_reply = process.env.OPENAI_API_KEY ? await getAIReply(title, content) : null;
+    const ai_reply = process.env.GROQ_API_KEY ? await getAIReply(title, content) : null;
 
     const { rows } = await pool.query(
-      `INSERT INTO posts (anonymous_name, title, content, tags, sentiment, ai_reply)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [anonymous_name, title, content, tags, sentiment, ai_reply]
+      `INSERT INTO posts (anonymous_name, session_id, title, content, tags, sentiment, ai_reply)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [anonymous_name, session_id || null, title, content, tags, sentiment, ai_reply]
     );
     res.status(201).json(rows[0]);
   } catch (err) {
